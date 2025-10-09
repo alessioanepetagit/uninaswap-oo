@@ -1,7 +1,7 @@
 package it.uninaswap.dao.postgres;
 
-import it.uninaswap.dao.DBConnection;
 import it.uninaswap.dao.OffertaDAO;
+import it.uninaswap.dbconnection.DBConnection;
 import it.uninaswap.model.Offerta;
 import it.uninaswap.model.enums.StatoOfferta;
 import it.uninaswap.model.enums.TipoOfferta;

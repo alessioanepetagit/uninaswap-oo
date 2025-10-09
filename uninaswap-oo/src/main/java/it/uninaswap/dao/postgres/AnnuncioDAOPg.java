@@ -9,8 +9,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.uninaswap.dao.DBConnection;
 import it.uninaswap.dao.AnnuncioDAO;
+import it.uninaswap.dbconnection.DBConnection;
 import it.uninaswap.model.Annuncio;
 import it.uninaswap.model.enums.StatoAnnuncio;
 import it.uninaswap.model.enums.TipoAnnuncio;

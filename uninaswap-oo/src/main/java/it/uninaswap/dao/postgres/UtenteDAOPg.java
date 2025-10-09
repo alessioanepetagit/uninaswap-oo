@@ -1,7 +1,7 @@
 package it.uninaswap.dao.postgres;
 
-import it.uninaswap.dao.DBConnection;
 import it.uninaswap.dao.UtenteDAO;
+import it.uninaswap.dbconnection.DBConnection;
 import it.uninaswap.model.Utente;
 
 import java.sql.Connection;

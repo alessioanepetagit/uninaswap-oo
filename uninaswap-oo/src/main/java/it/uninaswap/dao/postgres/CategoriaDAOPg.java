@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.uninaswap.dao.DBConnection;
 import it.uninaswap.dao.CategoriaDAO;
+import it.uninaswap.dbconnection.DBConnection;
 import it.uninaswap.model.Categoria;
 
 public class CategoriaDAOPg implements CategoriaDAO {

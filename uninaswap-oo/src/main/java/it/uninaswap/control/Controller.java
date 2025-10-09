@@ -8,6 +8,7 @@ import it.uninaswap.dao.AnnuncioDAO;
 import it.uninaswap.dao.CategoriaDAO;
 import it.uninaswap.dao.OffertaDAO;
 import it.uninaswap.dao.OggettoDAO;
+import it.uninaswap.dao.ReportDAO;
 import it.uninaswap.dao.UtenteDAO;
 
 import it.uninaswap.dao.postgres.AnnuncioDAOPg;
@@ -36,12 +37,12 @@ public class Controller {
   // =========================
   // DAO / Dipendenze
   // =========================
-  private final UtenteDAO   utenteDAO    = new UtenteDAOPg();
-  private final AnnuncioDAO annuncioDAO  = new AnnuncioDAOPg();
-  private final OffertaDAO  offertaDAO   = new OffertaDAOPg();
-  private final CategoriaDAO categoriaDAO= new CategoriaDAOPg();
-  private final OggettoDAO  oggettoDAO   = new OggettoDAOPg();
-  private final ReportDAOPg reportDao    = new ReportDAOPg();
+  private final UtenteDAO   utenteDAO     = new UtenteDAOPg();
+  private final AnnuncioDAO annuncioDAO   = new AnnuncioDAOPg();
+  private final OffertaDAO  offertaDAO    = new OffertaDAOPg();
+  private final CategoriaDAO categoriaDAO = new CategoriaDAOPg();
+  private final OggettoDAO  oggettoDAO    = new OggettoDAOPg();
+  private final ReportDAO   reportDao     = new ReportDAOPg();
 
   // =========================
   // Sessione
@@ -96,7 +97,6 @@ public class Controller {
 
     Oggetto obj = oggettoDAO.findById(oggettoId);
     if (obj == null) throw ValidationException.notFound("Oggetto");
-
     if (obj.getProprietarioId() != currentUser.getId())
       throw new AuthorizationException("Puoi creare annunci solo con oggetti che possiedi.");
     if (!obj.isDisponibile())
@@ -112,7 +112,6 @@ public class Controller {
     if (consegna == null || consegna.trim().isEmpty())
       consegna = "Consegna da concordare";
 
-    // se non viene passata/è vuota uso una descrizione di default
     String finalDescr = (descrizione != null && !descrizione.trim().isEmpty())
         ? descrizione.trim()
         : defaultDescrizioneFor(tipo, obj);
@@ -274,31 +273,18 @@ public class Controller {
   }
 
   // =========================
-  // Report (solo int + StatsPrezzi)
+  // Report (solo int / Double)
   // =========================
-  public int reportTotVendita()   { return (currentUser == null) ? 0 : reportDao.countTotVendita(currentUser.getId()); }
-  public int reportTotScambio()   { return (currentUser == null) ? 0 : reportDao.countTotScambio(currentUser.getId()); }
-  public int reportTotRegalo()    { return (currentUser == null) ? 0 : reportDao.countTotRegalo(currentUser.getId()); }
-  public int reportAccVendita()   { return (currentUser == null) ? 0 : reportDao.countAccVendita(currentUser.getId()); }
-  public int reportAccScambio()   { return (currentUser == null) ? 0 : reportDao.countAccScambio(currentUser.getId()); }
-  public int reportAccRegalo()    { return (currentUser == null) ? 0 : reportDao.countAccRegalo(currentUser.getId()); }
-  public int reportTotaleOfferte(){ return reportTotVendita() + reportTotScambio() + reportTotRegalo(); }
-//--- Vendite accettate: statistiche senza DTO ---
+  public int reportTotVendita()    { return (currentUser == null) ? 0 : reportDao.countTotVendita(currentUser.getId()); }
+  public int reportTotScambio()    { return (currentUser == null) ? 0 : reportDao.countTotScambio(currentUser.getId()); }
+  public int reportTotRegalo()     { return (currentUser == null) ? 0 : reportDao.countTotRegalo(currentUser.getId()); }
+  public int reportAccVendita()    { return (currentUser == null) ? 0 : reportDao.countAccVendita(currentUser.getId()); }
+  public int reportAccScambio()    { return (currentUser == null) ? 0 : reportDao.countAccScambio(currentUser.getId()); }
+  public int reportAccRegalo()     { return (currentUser == null) ? 0 : reportDao.countAccRegalo(currentUser.getId()); }
+  public int reportTotaleOfferte() { return reportTotVendita() + reportTotScambio() + reportTotRegalo(); }
 
-public int reportVenditeAccettateTot() {
- return (currentUser == null) ? 0 : reportDao.countVenditeAccettate(currentUser.getId());
-}
-
-public Double reportVenditeAccettateMedia() {
- return (currentUser == null) ? null : reportDao.avgVenditeAccettate(currentUser.getId());
-}
-
-public Double reportVenditeAccettateMin() {
- return (currentUser == null) ? null : reportDao.minVenditeAccettate(currentUser.getId());
-}
-
-public Double reportVenditeAccettateMax() {
- return (currentUser == null) ? null : reportDao.maxVenditeAccettate(currentUser.getId());
-}
-
+  public int    reportVenditeAccettateCount() { return (currentUser == null) ? 0    : reportDao.countVenditeAccettate(currentUser.getId()); }
+  public Double reportVenditeAccettateAvg()   { return (currentUser == null) ? null : reportDao.avgVenditeAccettate  (currentUser.getId()); }
+  public Double reportVenditeAccettateMin()   { return (currentUser == null) ? null : reportDao.minVenditeAccettate  (currentUser.getId()); }
+  public Double reportVenditeAccettateMax()   { return (currentUser == null) ? null : reportDao.maxVenditeAccettate  (currentUser.getId()); }
 }

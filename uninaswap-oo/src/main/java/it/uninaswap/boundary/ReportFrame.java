@@ -24,7 +24,7 @@ public class ReportFrame extends JFrame {
   }
 
   private void buildChart() {
-    // ---- Dati dal controller (solo int + singole metriche) ----
+    // ---- Dati dal controller (SOLO int / Double) ----
     int totVendita = controller.reportTotVendita();
     int totScambio = controller.reportTotScambio();
     int totRegalo  = controller.reportTotRegalo();
@@ -35,11 +35,10 @@ public class ReportFrame extends JFrame {
 
     int totaleOfferte = controller.reportTotaleOfferte();
 
-    // Statistiche € sulle vendite ACCETTATE (offerte inviate dall’utente)
-    Integer venditeAccTot = controller.reportVenditeAccettateTot();
-    Double venditeAccAvg  = controller.reportVenditeAccettateMedia();
-    Double venditeAccMin  = controller.reportVenditeAccettateMin();
-    Double venditeAccMax  = controller.reportVenditeAccettateMax();
+    // Nuove metriche (senza StatsPrezzi)
+    Double min = controller.reportVenditeAccettateMin();
+    Double avg = controller.reportVenditeAccettateAvg();
+    Double max = controller.reportVenditeAccettateMax();
 
     // ---- UI ----
     JPanel root = new JPanel(new BorderLayout(8,8));
@@ -61,10 +60,9 @@ public class ReportFrame extends JFrame {
         "Accettate per tipologia: Vendita=" + accVendita +
         "  Scambio=" + accScambio +
         "  Regalo=" + accRegalo + "\n" +
-        "Vendite accettate (offerte inviate): " + venditeAccTot + "\n" +
-        "   • min:  " + n(venditeAccMin) + " €" +
-        "   • avg:  " + n(venditeAccAvg) + " €" +
-        "   • max:  " + n(venditeAccMax) + " €"
+        "Vendite accettate – min: " + n(min) +
+        "  avg: " + n(avg) +
+        "  max: " + n(max)
     );
     root.add(txt, BorderLayout.WEST);
 
@@ -93,7 +91,5 @@ public class ReportFrame extends JFrame {
     setContentPane(root);
   }
 
-  private String n(Double v){
-    return (v == null) ? "-" : String.format("%.2f", v);
-  }
+  private String n(Double v){ return v==null? "-" : String.format("%.2f", v); }
 }

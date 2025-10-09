@@ -1,10 +1,19 @@
 package it.uninaswap.dao;
 
-import java.util.Map;
-
-import it.uninaswap.model.enums.TipoOfferta;
-
 public interface ReportDAO {
-  Map<TipoOfferta, Long> countOfferteByTipo(int userId);
-  Map<TipoOfferta, Long> countAccettateByTipo(int userId);
+  // Totali offerte inviate per tipologia
+  int countTotVendita(int userId);
+  int countTotScambio(int userId);
+  int countTotRegalo (int userId);
+
+  // Accettate per tipologia (tra quelle inviate)
+  int countAccVendita(int userId);
+  int countAccScambio(int userId);
+  int countAccRegalo (int userId);
+
+  // Statistiche vendite accettate (delle offerte inviate dall'utente)
+  int    countVenditeAccettate(int userId); // = COUNT(*)
+  Double avgVenditeAccettate  (int userId); // può essere null
+  Double minVenditeAccettate  (int userId); // può essere null
+  Double maxVenditeAccettate  (int userId); // può essere null
 }

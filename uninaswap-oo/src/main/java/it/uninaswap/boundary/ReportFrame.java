@@ -1,7 +1,6 @@
 package it.uninaswap.boundary;
 
 import it.uninaswap.control.Controller;
-import it.uninaswap.dao.StatsPrezzi;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -25,7 +24,7 @@ public class ReportFrame extends JFrame {
   }
 
   private void buildChart() {
-    // ---- Dati dal controller (SOLO int + StatsPrezzi) ----
+    // ---- Dati dal controller (solo int + singole metriche) ----
     int totVendita = controller.reportTotVendita();
     int totScambio = controller.reportTotScambio();
     int totRegalo  = controller.reportTotRegalo();
@@ -36,7 +35,11 @@ public class ReportFrame extends JFrame {
 
     int totaleOfferte = controller.reportTotaleOfferte();
 
-    StatsPrezzi sp = controller.reportStatsVendite();
+    // Statistiche € sulle vendite ACCETTATE (offerte inviate dall’utente)
+    Integer venditeAccTot = controller.reportVenditeAccettateTot();
+    Double venditeAccAvg  = controller.reportVenditeAccettateMedia();
+    Double venditeAccMin  = controller.reportVenditeAccettateMin();
+    Double venditeAccMax  = controller.reportVenditeAccettateMax();
 
     // ---- UI ----
     JPanel root = new JPanel(new BorderLayout(8,8));
@@ -58,9 +61,10 @@ public class ReportFrame extends JFrame {
         "Accettate per tipologia: Vendita=" + accVendita +
         "  Scambio=" + accScambio +
         "  Regalo=" + accRegalo + "\n" +
-        "Vendite accettate – min: " + n(sp.getMinimo()) +
-        "  avg: " + n(sp.getMedia()) +
-        "  max: " + n(sp.getMassimo())
+        "Vendite accettate (offerte inviate): " + venditeAccTot + "\n" +
+        "   • min:  " + n(venditeAccMin) + " €" +
+        "   • avg:  " + n(venditeAccAvg) + " €" +
+        "   • max:  " + n(venditeAccMax) + " €"
     );
     root.add(txt, BorderLayout.WEST);
 
@@ -89,5 +93,7 @@ public class ReportFrame extends JFrame {
     setContentPane(root);
   }
 
-  private String n(Double v){ return v==null? "-" : String.format("%.2f", v); }
+  private String n(Double v){
+    return (v == null) ? "-" : String.format("%.2f", v);
+  }
 }

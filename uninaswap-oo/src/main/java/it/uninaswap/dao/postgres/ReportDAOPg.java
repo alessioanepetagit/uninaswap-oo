@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import it.uninaswap.dao.DBConnection;
-import it.uninaswap.dao.StatsPrezzi;
+import it.uninaswap.dbconnection.DBConnection;
+
 
 /**
  * Versione senza Map/long: espone metodi int per ogni conteggio.
@@ -29,18 +29,9 @@ public class ReportDAOPg {
   private static final String SQL_ACC_REGALO  =
       "SELECT COUNT(*) FROM OFFERTA WHERE IDUtente = ? AND StatoOfferta = 'Accettata' AND Tipo = 'OffertaRegalo'";
 
-  // ---- Statistiche € sulle offerte di VENDITA accettate (inviate dall'utente) ----
-  private static final String SQL_STATS_VENDITE =
-      "SELECT COUNT(*) AS n, " +
-      "       AVG(o.PrezzoProposto) AS avgp, " +
-      "       MIN(o.PrezzoProposto) AS minp, " +
-      "       MAX(o.PrezzoProposto) AS maxp " +
-      "  FROM OFFERTA o " +
-      "  JOIN ANNUNCIO a ON a.IDAnnuncio = o.IDAnnuncio " +
-      " WHERE o.IDUtente = ? " +
-      "   AND o.StatoOfferta = 'Accettata' " +
-      "   AND a.Tipo = 'AnnuncioVendita'";
 
+
+  
   // ------------------ API public (solo int / StatsPrezzi) ------------------
 
   public int countTotVendita(int userId) { return scalarCount(SQL_TOT_VENDITA, userId); }
@@ -51,30 +42,55 @@ public class ReportDAOPg {
   public int countAccScambio(int userId) { return scalarCount(SQL_ACC_SCAMBIO, userId); }
   public int countAccRegalo (int userId) { return scalarCount(SQL_ACC_REGALO , userId); }
 
-  public StatsPrezzi statsVenditeAccettate(int userId) {
-    StatsPrezzi s = new StatsPrezzi();
-    try (Connection con = DBConnection.getConnection();
-         PreparedStatement ps = con.prepareStatement(SQL_STATS_VENDITE)) {
-      ps.setInt(1, userId);
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          s.setTotale(rs.getInt("n"));
+  private static final String SQL_STATS_VENDITE =
+		    "SELECT COUNT(*) AS tot, AVG(o.PrezzoProposto) AS media, " +
+		    "       MIN(o.PrezzoProposto) AS minimo, MAX(o.PrezzoProposto) AS massimo " +
+		    "FROM OFFERTA o " +
+		    "JOIN ANNUNCIO a ON a.IDAnnuncio = o.IDAnnuncio " +
+		    "WHERE o.StatoOfferta = 'Accettata' " +
+		    "  AND o.Tipo = 'OffertaVendita' " +
+		    "  AND o.IDUtente = ?";  // offerte fatte dall'utente corrente
 
-          double avg = rs.getDouble("avgp");
-          if (!rs.wasNull()) s.setMedia(avg); else s.setMedia(null);
+		// helper: una sola query, poi accessor per ogni metrica
+		private double[] fetchVenditeAccettateStats(int userId) {
+		  try (Connection con = DBConnection.getConnection();
+		       PreparedStatement ps = con.prepareStatement(SQL_STATS_VENDITE)) {
+		    ps.setInt(1, userId);
+		    try (ResultSet rs = ps.executeQuery()) {
+		      if (rs.next()) {
+		        double tot   = rs.getDouble("tot");    // COUNT(*)
+		        double media = rs.getDouble("media");  // può essere NULL -> 0.0 con wasNull check
+		        double min   = rs.getDouble("minimo");
+		        double max   = rs.getDouble("massimo");
+		        // gestisci NULL di media/min/max
+		        if (rs.wasNull()) media = Double.NaN;
+		        // rs.wasNull() si riferisce all'ultima get*: per sicurezza puoi testare ogni campo separatamente
+		        return new double[]{ tot, media, min, max };
+		      }
+		    }
+		  } catch (SQLException e) { e.printStackTrace(); }
+		  return new double[]{ 0d, Double.NaN, Double.NaN, Double.NaN };
+		}
 
-          double min = rs.getDouble("minp");
-          if (!rs.wasNull()) s.setMinimo(min); else s.setMinimo(null);
+		public int countVenditeAccettate(int userId) {
+		  return (int) fetchVenditeAccettateStats(userId)[0];
+		}
 
-          double max = rs.getDouble("maxp");
-          if (!rs.wasNull()) s.setMassimo(max); else s.setMassimo(null);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return s;
-  }
+		public Double avgVenditeAccettate(int userId) {
+		  double v = fetchVenditeAccettateStats(userId)[1];
+		  return Double.isNaN(v) ? null : v;
+		}
+
+		public Double minVenditeAccettate(int userId) {
+		  double v = fetchVenditeAccettateStats(userId)[2];
+		  return Double.isNaN(v) ? null : v;
+		}
+
+		public Double maxVenditeAccettate(int userId) {
+		  double v = fetchVenditeAccettateStats(userId)[3];
+		  return Double.isNaN(v) ? null : v;
+		}
+
 
   // ------------------ helper ------------------
 

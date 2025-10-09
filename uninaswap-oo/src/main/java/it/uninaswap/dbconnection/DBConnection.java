@@ -1,4 +1,4 @@
-package it.uninaswap.dao;
+package it.uninaswap.dbconnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

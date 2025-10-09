@@ -8,7 +8,6 @@ import it.uninaswap.dao.AnnuncioDAO;
 import it.uninaswap.dao.CategoriaDAO;
 import it.uninaswap.dao.OffertaDAO;
 import it.uninaswap.dao.OggettoDAO;
-import it.uninaswap.dao.StatsPrezzi;
 import it.uninaswap.dao.UtenteDAO;
 
 import it.uninaswap.dao.postgres.AnnuncioDAOPg;
@@ -284,7 +283,22 @@ public class Controller {
   public int reportAccScambio()   { return (currentUser == null) ? 0 : reportDao.countAccScambio(currentUser.getId()); }
   public int reportAccRegalo()    { return (currentUser == null) ? 0 : reportDao.countAccRegalo(currentUser.getId()); }
   public int reportTotaleOfferte(){ return reportTotVendita() + reportTotScambio() + reportTotRegalo(); }
-  public StatsPrezzi reportStatsVendite() {
-    return (currentUser == null) ? new StatsPrezzi() : reportDao.statsVenditeAccettate(currentUser.getId());
-  }
+//--- Vendite accettate: statistiche senza DTO ---
+
+public int reportVenditeAccettateTot() {
+ return (currentUser == null) ? 0 : reportDao.countVenditeAccettate(currentUser.getId());
+}
+
+public Double reportVenditeAccettateMedia() {
+ return (currentUser == null) ? null : reportDao.avgVenditeAccettate(currentUser.getId());
+}
+
+public Double reportVenditeAccettateMin() {
+ return (currentUser == null) ? null : reportDao.minVenditeAccettate(currentUser.getId());
+}
+
+public Double reportVenditeAccettateMax() {
+ return (currentUser == null) ? null : reportDao.maxVenditeAccettate(currentUser.getId());
+}
+
 }

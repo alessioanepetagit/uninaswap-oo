@@ -35,7 +35,6 @@ public class ReportFrame extends JFrame {
 
     int totaleOfferte = controller.reportTotaleOfferte();
 
-    // Nuove metriche (senza StatsPrezzi)
     Double min = controller.reportVenditeAccettateMin();
     Double avg = controller.reportVenditeAccettateAvg();
     Double max = controller.reportVenditeAccettateMax();

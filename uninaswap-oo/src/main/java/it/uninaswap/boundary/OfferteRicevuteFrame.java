@@ -94,9 +94,7 @@ public class OfferteRicevuteFrame extends JFrame {
     }
     int id = (Integer) model.getValueAt(row, 0);
     try {
-      boolean ok = accept
-          ? controller.accettaOffertaRicevuta(id)
-          : controller.rifiutaOffertaRicevuta(id);
+      boolean ok = accept ? controller.accettaOffertaRicevuta(id) : controller.rifiutaOffertaRicevuta(id);
 
       JOptionPane.showMessageDialog(
           this,

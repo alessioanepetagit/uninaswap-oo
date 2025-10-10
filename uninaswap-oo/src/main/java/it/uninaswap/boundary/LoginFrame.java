@@ -28,6 +28,25 @@ public class LoginFrame extends JFrame {
     setLocationRelativeTo(null);
     setContentPane(buildUi());
   }
+  
+  private void doLogin() {
+	    String u = userTf.getText() == null ? "" : userTf.getText().trim();
+	    String p = new String(passPf.getPassword());
+
+	    if (u.isEmpty() || p.isEmpty()) {
+	      msgLbl.setText("Inserisci username e password.");
+	      return;
+	    }
+
+	    Utente logged = controller.doLogin(u, p);
+	    if (logged != null) {
+	      msgLbl.setText(" ");
+	      dispose();
+	      new AnnunciFrame(controller).setVisible(true);
+	    } else {
+	      msgLbl.setText("Credenziali non valide. Riprova.");
+	    }
+	  }
 
   private JComponent buildUi() {
     JPanel root = new JPanel(new BorderLayout());
@@ -182,24 +201,7 @@ public class LoginFrame extends JFrame {
     }
   }
 
-  private void doLogin() {
-    String u = userTf.getText() == null ? "" : userTf.getText().trim();
-    String p = new String(passPf.getPassword());
 
-    if (u.isEmpty() || p.isEmpty()) {
-      msgLbl.setText("Inserisci username e password.");
-      return;
-    }
-
-    Utente logged = controller.doLogin(u, p);
-    if (logged != null) {
-      msgLbl.setText(" ");
-      dispose();
-      new AnnunciFrame(controller).setVisible(true);
-    } else {
-      msgLbl.setText("Credenziali non valide. Riprova.");
-    }
-  }
 
   /** Bordo arrotondato semplice per le card. */
   static class RoundedBorder extends javax.swing.border.LineBorder {

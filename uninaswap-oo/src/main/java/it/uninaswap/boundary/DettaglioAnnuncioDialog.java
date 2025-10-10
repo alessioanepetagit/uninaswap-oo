@@ -27,6 +27,73 @@ public class DettaglioAnnuncioDialog extends JDialog {
     buildUi();
   }
 
+  // =========================
+  // Handlers
+  // =========================
+
+  /** Invio offerta al ribasso (prezzo deve essere < richiesto). */
+  private void onInviaOffertaVendita() {
+    try {
+      String s = prezzoTf != null ? prezzoTf.getText().trim() : "";
+      double prezzo = Double.parseDouble(s);
+      boolean ok = controller.inviaOffertaVendita(annuncio.getId(), prezzo);
+      JOptionPane.showMessageDialog(this, ok ? "Offerta inviata." : "Invio non riuscito.");
+      if (ok) dispose();
+    } catch (NumberFormatException nfe) {
+      JOptionPane.showMessageDialog(this, "Inserisci un prezzo valido.", "Dato non valido", JOptionPane.WARNING_MESSAGE);
+    } catch (BusinessException be) {
+      JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
+    } catch (InfrastructureException ie) {
+      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
+      ie.printStackTrace();
+    }
+  }
+
+  /** NUOVO: invia un’offerta esattamente al prezzo richiesto. */
+  private void onAccettaPrezzoRichiesto() {
+    try {
+      boolean ok = controller.accettaPrezzoRichiesto(annuncio.getId());
+      JOptionPane.showMessageDialog(this, ok ? "Offerta inviata." : "Invio non riuscito.");
+      if (ok) dispose();
+    } catch (BusinessException be) {
+      JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
+    } catch (InfrastructureException ie) {
+      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
+      ie.printStackTrace();
+    }
+  }
+
+  private void onInviaOffertaScambio() {
+    try {
+      String proposta = (textArea != null) ? textArea.getText().trim() : "";
+      boolean ok = controller.inviaOffertaScambio(annuncio.getId(), proposta);
+      JOptionPane.showMessageDialog(this, ok ? "Proposta inviata." : "Invio non riuscito.");
+      if (ok) dispose();
+    } catch (BusinessException be) {
+      JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
+    } catch (InfrastructureException ie) {
+      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
+      ie.printStackTrace();
+    }
+  }
+
+  private void onInviaOffertaRegalo() {
+    try {
+      String msg = (textArea != null) ? textArea.getText().trim() : "";
+      boolean ok = controller.inviaOffertaRegalo(annuncio.getId(), msg);
+      JOptionPane.showMessageDialog(this, ok ? "Richiesta inviata." : "Invio non riuscito.");
+      if (ok) dispose();
+    } catch (BusinessException be) {
+      JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
+    } catch (InfrastructureException ie) {
+      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
+      ie.printStackTrace();
+    }
+  }
+
+
+  
+  
   private void buildUi() {
     JPanel center = new JPanel(new BorderLayout(8,8));
 
@@ -106,69 +173,5 @@ public class DettaglioAnnuncioDialog extends JDialog {
     setLayout(new BorderLayout());
     add(center, BorderLayout.CENTER);
     add(south, BorderLayout.SOUTH);
-  }
-
-  // =========================
-  // Handlers
-  // =========================
-
-  /** Invio offerta al ribasso (prezzo deve essere < richiesto). */
-  private void onInviaOffertaVendita() {
-    try {
-      String s = prezzoTf != null ? prezzoTf.getText().trim() : "";
-      double prezzo = Double.parseDouble(s);
-      boolean ok = controller.inviaOffertaVendita(annuncio.getId(), prezzo);
-      JOptionPane.showMessageDialog(this, ok ? "Offerta inviata." : "Invio non riuscito.");
-      if (ok) dispose();
-    } catch (NumberFormatException nfe) {
-      JOptionPane.showMessageDialog(this, "Inserisci un prezzo valido.", "Dato non valido", JOptionPane.WARNING_MESSAGE);
-    } catch (BusinessException be) {
-      JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-      ie.printStackTrace();
-    }
-  }
-
-  /** NUOVO: invia un’offerta esattamente al prezzo richiesto. */
-  private void onAccettaPrezzoRichiesto() {
-    try {
-      boolean ok = controller.accettaPrezzoRichiesto(annuncio.getId());
-      JOptionPane.showMessageDialog(this, ok ? "Offerta inviata." : "Invio non riuscito.");
-      if (ok) dispose();
-    } catch (BusinessException be) {
-      JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-      ie.printStackTrace();
-    }
-  }
-
-  private void onInviaOffertaScambio() {
-    try {
-      String proposta = (textArea != null) ? textArea.getText().trim() : "";
-      boolean ok = controller.inviaOffertaScambio(annuncio.getId(), proposta);
-      JOptionPane.showMessageDialog(this, ok ? "Proposta inviata." : "Invio non riuscito.");
-      if (ok) dispose();
-    } catch (BusinessException be) {
-      JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-      ie.printStackTrace();
-    }
-  }
-
-  private void onInviaOffertaRegalo() {
-    try {
-      String msg = (textArea != null) ? textArea.getText().trim() : "";
-      boolean ok = controller.inviaOffertaRegalo(annuncio.getId(), msg);
-      JOptionPane.showMessageDialog(this, ok ? "Richiesta inviata." : "Invio non riuscito.");
-      if (ok) dispose();
-    } catch (BusinessException be) {
-      JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-      ie.printStackTrace();
-    }
   }
 }

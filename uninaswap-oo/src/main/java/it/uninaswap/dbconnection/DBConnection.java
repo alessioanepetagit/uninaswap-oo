@@ -13,8 +13,6 @@ public final class DBConnection {
   private DBConnection() {}
 
   public static Connection getConnection() throws SQLException {
-    // Se richiesto dagli esempi del prof:
-    // try { Class.forName("org.postgresql.Driver"); } catch (ClassNotFoundException ignored) {}
     return DriverManager.getConnection(URL, USER, PASS);
   }
 }

@@ -13,7 +13,7 @@ public interface ReportDAO {
 
   // Statistiche vendite accettate (delle offerte inviate dall'utente)
   int    countVenditeAccettate(int userId); // = COUNT(*)
-  Double avgVenditeAccettate  (int userId); // può essere null
-  Double minVenditeAccettate  (int userId); // può essere null
-  Double maxVenditeAccettate  (int userId); // può essere null
+  Double avgVenditeAccettate  (int userId); 
+  Double minVenditeAccettate  (int userId); 
+  Double maxVenditeAccettate  (int userId); 
 }

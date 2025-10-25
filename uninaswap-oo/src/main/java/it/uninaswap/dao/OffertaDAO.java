@@ -4,15 +4,6 @@ import it.uninaswap.model.Offerta;
 
 import java.util.List;
 
-/**
- * Data Access Object per le Offerte.
- *
- * Nota sui contratti:
- * - I metodi qui NON lanciano SQLException: gli implementativi dovrebbero
- *   incapsulare problemi tecnici in un'InfrastructureException (runtime).
- * - Le regole di dominio (es. "solo InAttesa", "solo proprietario/offerente")
- *   sono applicate nell'implementazione tramite WHERE protettive.
- */
 public interface OffertaDAO {
 
   /**

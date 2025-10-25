@@ -26,7 +26,7 @@ public class BusinessException extends Exception {
     this.code = null;
   }
 
-  /** Nuovo: costruttore a due stringhe usato da altre classi */
+  /* costruttore a due stringhe usato da altre classi */
   public BusinessException(String code, String message) {
     super(message != null ? message : code);
     this.code = code;

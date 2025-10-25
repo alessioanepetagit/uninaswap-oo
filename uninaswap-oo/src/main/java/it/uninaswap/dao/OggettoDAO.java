@@ -6,6 +6,6 @@ import java.util.List;
 public interface OggettoDAO {
   Oggetto findById(int id);
 
-  // NUOVO: lista oggetti disponibili dell’utente
+  // lista oggetti disponibili dell’utente
   List<Oggetto> findDisponibiliByUtente(int userId);
 }

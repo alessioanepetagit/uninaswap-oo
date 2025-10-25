@@ -2,7 +2,6 @@ package it.uninaswap.boundary;
 
 import it.uninaswap.control.Controller;
 import it.uninaswap.exceptions.BusinessException;
-import it.uninaswap.exceptions.InfrastructureException;
 import it.uninaswap.model.Annuncio;
 import it.uninaswap.model.enums.TipoAnnuncio;
 
@@ -27,9 +26,7 @@ public class DettaglioAnnuncioDialog extends JDialog {
     buildUi();
   }
 
-  // =========================
   // Handlers
-  // =========================
 
   /** Invio offerta al ribasso (prezzo deve essere < richiesto). */
   private void onInviaOffertaVendita() {
@@ -43,13 +40,10 @@ public class DettaglioAnnuncioDialog extends JDialog {
       JOptionPane.showMessageDialog(this, "Inserisci un prezzo valido.", "Dato non valido", JOptionPane.WARNING_MESSAGE);
     } catch (BusinessException be) {
       JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-      ie.printStackTrace();
-    }
+    } 
   }
 
-  /** NUOVO: invia un’offerta esattamente al prezzo richiesto. */
+  /* invia un’offerta esattamente al prezzo richiesto. */
   private void onAccettaPrezzoRichiesto() {
     try {
       boolean ok = controller.accettaPrezzoRichiesto(annuncio.getId());
@@ -57,10 +51,7 @@ public class DettaglioAnnuncioDialog extends JDialog {
       if (ok) dispose();
     } catch (BusinessException be) {
       JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-      ie.printStackTrace();
-    }
+    } 
   }
 
   private void onInviaOffertaScambio() {
@@ -71,10 +62,7 @@ public class DettaglioAnnuncioDialog extends JDialog {
       if (ok) dispose();
     } catch (BusinessException be) {
       JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-      ie.printStackTrace();
-    }
+    } 
   }
 
   private void onInviaOffertaRegalo() {
@@ -85,10 +73,7 @@ public class DettaglioAnnuncioDialog extends JDialog {
       if (ok) dispose();
     } catch (BusinessException be) {
       JOptionPane.showMessageDialog(this, be.getMessage(), "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(this, "Problema tecnico. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-      ie.printStackTrace();
-    }
+    } 
   }
 
 

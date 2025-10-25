@@ -7,10 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-/**
- * Finestra di login con hero/intro e form a destra.
- * Semplificata per Windows: usa "Segoe UI Emoji" per le emoji nel riquadro sinistro.
- */
+
 public class LoginFrame extends JFrame {
   private static final long serialVersionUID = 1L;
 

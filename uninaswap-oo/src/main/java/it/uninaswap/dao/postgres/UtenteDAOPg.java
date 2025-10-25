@@ -55,7 +55,6 @@ public class UtenteDAOPg implements UtenteDAO {
     u.setUsername(rs.getString("Username"));
     u.setNome(rs.getString("Nome"));
     u.setCognome(rs.getString("Cognome"));
-    // NOTA: non impostiamo la password perché il model non espone setPassword
     return u;
   }
 }

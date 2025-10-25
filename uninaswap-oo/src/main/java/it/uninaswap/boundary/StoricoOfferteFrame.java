@@ -2,7 +2,6 @@ package it.uninaswap.boundary;
 
 import it.uninaswap.control.Controller;
 import it.uninaswap.exceptions.BusinessException;
-import it.uninaswap.exceptions.InfrastructureException;
 import it.uninaswap.model.Annuncio;
 import it.uninaswap.model.Offerta;
 
@@ -95,14 +94,6 @@ public class StoricoOfferteFrame extends JFrame {
           "Operazione non consentita",
           JOptionPane.WARNING_MESSAGE
       );
-    } catch (InfrastructureException ie) {
-      JOptionPane.showMessageDialog(
-          this,
-          "Problema tecnico. Riprova.",
-          "Errore",
-          JOptionPane.ERROR_MESSAGE
-      );
-      ie.printStackTrace();
-    }
+    } 
   }
 }

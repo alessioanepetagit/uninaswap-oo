@@ -26,7 +26,7 @@ public class DettaglioAnnuncioDialog extends JDialog {
     buildUi();
   }
 
-  // Handlers
+
 
   /** Invio offerta al ribasso (prezzo deve essere < richiesto). */
   private void onInviaOffertaVendita() {

@@ -7,7 +7,6 @@ public class StateConflictException extends BusinessException {
     super("STATE_CONFLICT", message);
   }
 
-  // Factory methods comodi
   public static StateConflictException alreadyEvaluated() {
     return new StateConflictException("L'offerta non è più modificabile: è già stata valutata.");
   }

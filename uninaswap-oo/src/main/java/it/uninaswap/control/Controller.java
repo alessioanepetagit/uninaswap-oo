@@ -34,9 +34,7 @@ import it.uninaswap.exceptions.ValidationException;
 
 public class Controller {
 
-  // =========================
   // DAO / Dipendenze
-  // =========================
   private final UtenteDAO   utenteDAO     = new UtenteDAOPg();
   private final AnnuncioDAO annuncioDAO   = new AnnuncioDAOPg();
   private final OffertaDAO  offertaDAO    = new OffertaDAOPg();
@@ -44,14 +42,10 @@ public class Controller {
   private final OggettoDAO  oggettoDAO    = new OggettoDAOPg();
   private final ReportDAO   reportDao     = new ReportDAOPg();
 
-  // =========================
   // Sessione
-  // =========================
   private Utente currentUser;
 
-  // =========================
   // Login / Sessione
-  // =========================
   public Utente doLogin(String username, String password) {
     if (username == null || password == null) return null;
     String u = username.trim();
@@ -63,9 +57,7 @@ public class Controller {
 
   public Utente getCurrentUser() { return currentUser; }
 
-  // =========================
   // Letture base
-  // =========================
   public List<Categoria> getCategorie() { return categoriaDAO.findAll(); }
 
   public List<Annuncio> cercaAnnunci(String categoriaLike, TipoAnnuncio tipo) {
@@ -85,10 +77,8 @@ public class Controller {
     return (u != null) ? u.getUsername() : null;
   }
 
-  // =========================
   // Creazione Annuncio
-  // =========================
-  /** Crea un annuncio dell’utente loggato. */
+  /* Crea un annuncio dell’utente loggato. */
   public boolean createAnnuncio(TipoAnnuncio tipo, int categoriaId, int oggettoId,
                                 String consegna, String descrizione, Double prezzoVendita)
       throws BusinessException {
@@ -138,17 +128,16 @@ public class Controller {
     }
   }
 
-  /** Oggetti dell’utente corrente che risultano disponibili. */
+  /* Oggetti dell’utente corrente che risultano disponibili. */
   public List<Oggetto> getMieiOggettiDisponibili() throws BusinessException {
     if (currentUser == null) throw AuthorizationException.notAuthenticated();
     return oggettoDAO.findDisponibiliByUtente(currentUser.getId());
   }
 
-  // =========================
-  // Invio Offerte
-  // =========================
 
-  /** Offerta al ribasso: richiede prezzo < richiesto. */
+  // Invio Offerte
+
+  /* Offerta al ribasso: richiede prezzo < richiesto. */
   public boolean inviaOffertaVendita(int annuncioId, double prezzo) throws BusinessException {
     if (currentUser == null) throw AuthorizationException.notAuthenticated();
     if (prezzo <= 0) throw ValidationException.positivePrice();
@@ -172,7 +161,7 @@ public class Controller {
     return offertaDAO.create(o) != null;
   }
 
-  /** Accetta il prezzo richiesto (nessun check “<”). */
+  /* Accetta il prezzo richiesto (nessun check “<”). */
   public boolean accettaPrezzoRichiesto(int annuncioId) throws BusinessException {
     if (currentUser == null) throw AuthorizationException.notAuthenticated();
 
@@ -230,9 +219,7 @@ public class Controller {
     return offertaDAO.create(o) != null;
   }
 
-  // =========================
   // Modifica / Ritiro / Decisione
-  // =========================
   public boolean modificaOfferta(Offerta o) throws BusinessException {
     if (currentUser == null) throw AuthorizationException.notAuthenticated();
     if (o == null) throw ValidationException.notFound("Offerta");
@@ -272,9 +259,8 @@ public class Controller {
     return true;
   }
 
-  // =========================
   // Report (solo int / Double)
-  // =========================
+ 
   public int reportTotVendita()    { return (currentUser == null) ? 0 : reportDao.countTotVendita(currentUser.getId()); }
   public int reportTotScambio()    { return (currentUser == null) ? 0 : reportDao.countTotScambio(currentUser.getId()); }
   public int reportTotRegalo()     { return (currentUser == null) ? 0 : reportDao.countTotRegalo(currentUser.getId()); }

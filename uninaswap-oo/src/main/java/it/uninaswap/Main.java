@@ -15,7 +15,6 @@ public class Main {
 
     SwingUtilities.invokeLater(() -> {
       Controller controller = new Controller();
-      // Mostra PRIMA la schermata di login (sarà lei ad aprire AnnunciFrame dopo il successo)
       new LoginFrame(controller).setVisible(true);
     });
   }

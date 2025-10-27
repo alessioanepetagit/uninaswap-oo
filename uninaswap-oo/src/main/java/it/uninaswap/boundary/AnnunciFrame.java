@@ -36,15 +36,63 @@ public class AnnunciFrame extends JFrame {
     setLocationRelativeTo(null);
   }
 
+  private void loadFilters() {
+	    // Categoria: (tutte) + reali
+	    cboCategoria.addItem(new Categoria(0, "(tutte)"));
+	    List<Categoria> cat = controller.getCategorie();
+	    for (Categoria c : cat) cboCategoria.addItem(c);
+
+	    // Tipo opzionale: prima posizione null
+	    cboTipo.insertItemAt(null, 0);
+	    cboTipo.setSelectedIndex(0);
+	  }
+
+	  private void search() {
+	    Categoria sel = (Categoria) cboCategoria.getSelectedItem();
+	    String categoriaLike = (sel == null || sel.getId() == 0) ? null : sel.getNome();
+	    TipoAnnuncio tipo = (TipoAnnuncio) cboTipo.getSelectedItem();
+
+	    List<Annuncio> list = controller.cercaAnnunci(categoriaLike, tipo);
+	    model.setRowCount(0);
+	    for (Annuncio a : list) {
+	      String nomeOggetto = controller.getNomeOggetto(a.getOggettoId());
+	      String nomeUtente  = controller.getNomeUtenteById(a.getAutoreId());
+	      model.addRow(new Object[]{
+	          a.getId(),
+	          a.getTipo() != null ? a.getTipo().name() : "N/D",
+	          nomeOggetto,
+	          a.getDescrizione(),
+	          a.getPrezzoRichiesto(),
+	          nomeUtente
+	      });}
+	    }
+	  
+
+	  private void openSelected() {
+	    int row = table.getSelectedRow();
+	    if (row < 0) {
+	      JOptionPane.showMessageDialog(this, "Seleziona un annuncio.");
+	      return;
+	    }
+	    int id = (Integer) model.getValueAt(row, 0);
+	    Annuncio a = controller.getAnnuncio(id);
+	    if (a == null) {
+	      JOptionPane.showMessageDialog(this, "Annuncio non trovato.");
+	      return;
+	    }
+	    new DettaglioAnnuncioDialog(this, controller, a).setVisible(true);
+	  }
+	
+
   private void buildUi() {
-    // ====== HERO HEADER (titolo + sottotitolo) ======
+    //  HERO HEADER (titolo + sottotitolo) 
     JPanel hero = UITheme.appHeader(
         "UninaSwap — Annunci",
         "Compra, scambia e regala in modo semplice tra studenti.",
         UIManager.getIcon("OptionPane.informationIcon")
     );
 
-    // ====== TOOLBAR (solo azioni secondarie) ======
+    // TOOLBAR (solo azioni secondarie) 
     JToolBar tb = new JToolBar();
     UITheme.styleToolbar(tb);
     tb.add(new JLabel("  Annunci"));
@@ -60,7 +108,7 @@ public class AnnunciFrame extends JFrame {
     tb.add(Box.createHorizontalStrut(6));
     tb.add(bRicevute);
 
-    // ====== FILTRI ======
+    // FILTRI 
     JPanel filters = UITheme.card();
     filters.setLayout(new GridBagLayout());
     GridBagConstraints gc = new GridBagConstraints();
@@ -84,7 +132,7 @@ public class AnnunciFrame extends JFrame {
     JButton bCerca = bigSecondaryButton("Cerca");
     filters.add(bCerca, gc);
 
-    // ====== TABELLA ======
+    // TABELLA 
     model = new DefaultTableModel(
         new Object[]{"IDAnnuncio","Tipo","Oggetto","Descrizione","Prezzo","Creato da"}, 0
     ) {
@@ -102,7 +150,7 @@ public class AnnunciFrame extends JFrame {
     ModernTable.beautify(table);
     JScrollPane center = new JScrollPane(table);
 
-    // ====== BOTTONI IN BASSO ======
+    // BOTTONI IN BASSO 
     JButton bApri = bigPrimaryButton("Dettaglio / Offerta");
     JButton bCrea = bigPrimaryButton("Crea annuncio"); // spostato in basso
 
@@ -111,7 +159,7 @@ public class AnnunciFrame extends JFrame {
     southButtons.add(bApri);
     southButtons.add(bCrea);
 
-    // ====== STATUS BAR ======
+    //  STATUS BAR 
     statusLbl = new JLabel("  Pronto.");
     UITheme.muted(statusLbl);
     JPanel statusBar = new JPanel(new BorderLayout());
@@ -119,13 +167,13 @@ public class AnnunciFrame extends JFrame {
     statusBar.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, UITheme.BORDER_SOFT));
     statusBar.add(statusLbl, BorderLayout.WEST);
 
-    // ====== PANNELLO BOTTOM ======
+    // PANNELLO BOTTOM 
     JPanel bottom = new JPanel(new BorderLayout());
     bottom.setOpaque(false);
     bottom.add(southButtons, BorderLayout.NORTH);
     bottom.add(statusBar, BorderLayout.SOUTH);
 
-    // ====== TOP STACK (hero + toolbar + filtri) ======
+    // TOP STACK (hero + toolbar + filtri) 
     JPanel top = new JPanel();
     top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
     top.setOpaque(false);
@@ -134,14 +182,14 @@ public class AnnunciFrame extends JFrame {
     top.add(Box.createVerticalStrut(6));
     top.add(filters);
 
-    // ====== ASSEMBLAGGIO FRAME ======
+    // ASSEMBLAGGIO FRAME 
     getContentPane().setLayout(new BorderLayout(0, 8));
     getContentPane().setBackground(UITheme.BG);
     add(top, BorderLayout.NORTH);
     add(center, BorderLayout.CENTER);
     add(bottom, BorderLayout.SOUTH);
 
-    // ====== LISTENERS ======
+    //  LISTENERS 
     bCerca.addActionListener(e -> { search(); statusLbl.setText("  Ricerca aggiornata."); });
     bStorico.addActionListener(e -> new StoricoOfferteFrame(controller).setVisible(true));
     bReport.addActionListener(e -> new ReportFrame(controller).setVisible(true));
@@ -164,7 +212,7 @@ public class AnnunciFrame extends JFrame {
     });
   }
 
-  /** Bottoni primari: grandi, leggibili, sempre visibili. */
+  
   private JButton bigPrimaryButton(String text) {
     JButton b = new JButton(text);
     UITheme.primary(b);
@@ -172,11 +220,11 @@ public class AnnunciFrame extends JFrame {
     b.setPreferredSize(new Dimension(180, 36));
     b.setOpaque(true);
     b.setContentAreaFilled(true);
-    b.setForeground(Color.WHITE); // niente testo "trasparente"
+    b.setForeground(Color.WHITE); 
     return b;
   }
 
-  /** Bottoni secondari: grandi ma con stile “outline/soft”. */
+ 
   private JButton bigSecondaryButton(String text) {
     JButton b = new JButton(text);
     UITheme.secondary(b);
@@ -184,54 +232,7 @@ public class AnnunciFrame extends JFrame {
     b.setPreferredSize(new Dimension(180, 36));
     b.setOpaque(true);
     b.setContentAreaFilled(true);
-    b.setForeground(UITheme.INK); // contrasta su fondo chiaro
+    b.setForeground(UITheme.INK); 
     return b;
+   }
   }
-
-  private void loadFilters() {
-    // Categoria: (tutte) + reali
-    cboCategoria.addItem(new Categoria(0, "(tutte)"));
-    List<Categoria> cat = controller.getCategorie();
-    for (Categoria c : cat) cboCategoria.addItem(c);
-
-    // Tipo opzionale: prima posizione null
-    cboTipo.insertItemAt(null, 0);
-    cboTipo.setSelectedIndex(0);
-  }
-
-  private void search() {
-    Categoria sel = (Categoria) cboCategoria.getSelectedItem();
-    String categoriaLike = (sel == null || sel.getId() == 0) ? null : sel.getNome();
-    TipoAnnuncio tipo = (TipoAnnuncio) cboTipo.getSelectedItem();
-
-    List<Annuncio> list = controller.cercaAnnunci(categoriaLike, tipo);
-    model.setRowCount(0);
-    for (Annuncio a : list) {
-      String nomeOggetto = controller.getNomeOggetto(a.getOggettoId());
-      String nomeUtente  = controller.getNomeUtenteById(a.getAutoreId());
-      model.addRow(new Object[]{
-          a.getId(),
-          a.getTipo() != null ? a.getTipo().name() : "N/D",
-          nomeOggetto,
-          a.getDescrizione(),
-          a.getPrezzoRichiesto(),
-          nomeUtente
-      });
-    }
-  }
-
-  private void openSelected() {
-    int row = table.getSelectedRow();
-    if (row < 0) {
-      JOptionPane.showMessageDialog(this, "Seleziona un annuncio.");
-      return;
-    }
-    int id = (Integer) model.getValueAt(row, 0);
-    Annuncio a = controller.getAnnuncio(id);
-    if (a == null) {
-      JOptionPane.showMessageDialog(this, "Annuncio non trovato.");
-      return;
-    }
-    new DettaglioAnnuncioDialog(this, controller, a).setVisible(true);
-  }
-}

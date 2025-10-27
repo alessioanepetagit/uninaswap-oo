@@ -65,7 +65,7 @@ public class ReportFrame extends JFrame {
     );
     root.add(txt, BorderLayout.WEST);
 
-    // ---- Grafico ----
+    // Grafico 
     DefaultCategoryDataset ds = new DefaultCategoryDataset();
     ds.addValue(totVendita, "Totali (inviate)", "Vendita");
     ds.addValue(totScambio, "Totali (inviate)", "Scambio");

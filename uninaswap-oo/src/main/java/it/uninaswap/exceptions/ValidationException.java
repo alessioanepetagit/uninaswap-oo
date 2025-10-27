@@ -7,7 +7,7 @@ public class ValidationException extends BusinessException {
     super("VALIDATION", message);
   }
 
-  // Factory methods di validazione
+  
   public static ValidationException positivePrice() {
     return new ValidationException("Il prezzo deve essere un valore positivo.");
   }

@@ -3,7 +3,7 @@ package it.uninaswap.exceptions;
 public class BusinessException extends Exception {
   private static final long serialVersionUID = 1L;
 
-  // opzionale: codice/chiave errore (per logging/UI)
+  // codice/chiave errore (per logging/UI)
   private final String code;
 
   public BusinessException() {

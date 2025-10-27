@@ -64,7 +64,7 @@ public class ReportDAOPg implements ReportDAO {
     return Double.isNaN(v) ? null : v;
   }
 
-  // ------------------ helper ------------------
+  // helper 
 
   private int scalarCount(String sql, int userId) {
     try (Connection con = DBConnection.getConnection();
@@ -79,7 +79,7 @@ public class ReportDAOPg implements ReportDAO {
     return 0;
   }
 
-  /** Ritorna { tot, media, min, max } come double; per i NULL usa NaN. */
+  /* Ritorna { tot, media, min, max } come double; per i NULL usa NaN. */
   private double[] fetchVenditeAccettateStats(int userId) {
     try (Connection con = DBConnection.getConnection();
          PreparedStatement ps = con.prepareStatement(SQL_STATS_VENDITE)) {
@@ -89,7 +89,7 @@ public class ReportDAOPg implements ReportDAO {
           // COUNT(*) non è mai NULL
           double tot = rs.getInt("tot");
 
-          // NUMERIC/DECIMAL -> BigDecimal in JDBC; gestisci i NULL
+          // NUMERIC/DECIMAL -> BigDecimal in JDBC
           BigDecimal bdMedia = rs.getBigDecimal("media");
           BigDecimal bdMin   = rs.getBigDecimal("minimo");
           BigDecimal bdMax   = rs.getBigDecimal("massimo");
